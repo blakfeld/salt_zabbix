@@ -1,0 +1,27 @@
+IP: {{ IP }}
+Hostname: {{ Hostname }}
+Proxy: {{ Proxy }}
+{% if 'adminserver' in Roles -%}
+Hostgroup: AdminServer
+{% elif 'webserver' in Roles -%}
+Hostgroup: WebServer
+{% elif 'database' in Roles -%}
+Hostgroup: DatabaseServer
+{% elif 'cacheserver' in Roles -%}
+Hostgroup: CachingServers
+{% elif 'fileserver' in Roles -%}
+Hostgroup: FileServers
+{% else -%}
+Hostgroup: OtherServices
+{%- endif %}
+Templates:
+  {% for each_template in pillar['zabbix-templates']['global'] -%}
+  - {{ each_template }}
+  {% endfor -%}
+  {% for each_role in Roles -%}
+  {% if each_role in pillar['zabbix-templates'] -%}
+  {% for each_template in pillar['zabbix-templates'][each_role] -%}
+  - {{ each_template }}
+  {% endfor %}
+  {%- endif %}
+  {%- endfor %}

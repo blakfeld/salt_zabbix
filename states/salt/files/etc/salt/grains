@@ -1,0 +1,5 @@
+roles:
+  {%- for role in role_list %}
+  - {{ role }}
+  {% endfor %}
+varnish: {{ varnish_status }}
